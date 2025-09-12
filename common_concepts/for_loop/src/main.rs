@@ -46,8 +46,31 @@ fn sum_using_for() -> i32 {
   sum
 }
 
+// 2.
+fn fibonacci(n: usize) -> Vec<u32> {
+  if n == 0 { return vec![]; }
+  if n == 1 { return vec![0]; }
+  let mut fib = vec![0, 1];
+  for i in 2..n {
+    let next = fib[i-1] + fib[i-2];
+    fib.push(next);
+  }
+  fib
+}
+
+// 3.
+fn reverse_string(s: &str) -> String {
+  let mut reversed = String::new();
+  for c in s.chars().rev() {
+    reversed.push(c);
+  }
+  reversed
+}
+
 fn main() {
     println!("{}", sum_using_loop());
     println!("{}", sum_using_while());
     println!("{}", sum_using_for());
+    println!("{:?}", fibonacci(10));
+    println!("{}", reverse_string("hello"));
 }

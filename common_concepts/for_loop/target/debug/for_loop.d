@@ -1,1 +1,1 @@
-/home/thangquyeenf/source/rs/exercise/common_concepts/for_loop/target/debug/for_loop: /home/thangquyeenf/source/rs/exercise/common_concepts/for_loop/src/main.rs
+/home/thangquyeenf/project/rs/excercise/common_concepts/for_loop/target/debug/for_loop: /home/thangquyeenf/project/rs/excercise/common_concepts/for_loop/src/main.rs
