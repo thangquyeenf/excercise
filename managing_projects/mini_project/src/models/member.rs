@@ -20,7 +20,11 @@ impl Member {
         }
     }
 
-    pub fn return_book(&mut self, book_id: u32) {
-        self.borrowed_books.retain(|&x| x != book_id)
+    pub fn return_book(&mut self, book_id: u32) -> Result<(), String> {
+        if !self.borrowed_books.contains(&book_id) {
+            return Err("This book is not borrowed by the member.".to_string());
+        }
+        self.borrowed_books.retain(|&x| x != book_id);
+        Ok(())
     }
 }

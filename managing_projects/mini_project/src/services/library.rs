@@ -52,6 +52,7 @@ impl Library {
         title: Option<String>,
         author: Option<String>,
         year: Option<u32>,
+        is_borrowed: Option<bool>,
     ) -> bool {
         if let Some(book) = self.books.iter_mut().find(|x| x.id == id) {
             if let Some(t) = title {
@@ -62,6 +63,9 @@ impl Library {
             }
             if let Some(y) = year {
                 book.year = y;
+            }
+            if let Some(ib) = is_borrowed {
+                book.is_borrowed = ib;
             }
             true
         } else {
@@ -81,6 +85,12 @@ impl Library {
         self.books.iter().find(|x| x.id == book_id)
     }
 
+    fn is_borrowed(&self, book_id: u32) -> bool {
+        self.members
+            .iter()
+            .any(|m| m.borrowed_books.contains(&book_id))
+    }
+
     // --- Member methods ---
     pub fn add_member(&mut self, member: Member) {
         if !self.is_member(&member.id) {
@@ -94,31 +104,38 @@ impl Library {
         self.members.iter().any(|m| m.id == *member_id)
     }
 
-    pub fn borrow_book(&mut self, member_id: u32, book_id: u32) -> bool {
+    pub fn borrow_book(&mut self, member_id: u32, book_id: u32) -> Result<(), String> {
         if !self.is_contain_book(book_id) {
-            println!("Book not found!");
-            return false;
+            return Err("Book not found!".to_string());
         }
+
+        if self.is_borrowed(book_id) {
+            return Err("Book is already borrowed!".to_string());
+        }
+
         if let Some(member) = self.members.iter_mut().find(|x| x.id == member_id) {
             member.borrow_book(&book_id);
-            true
+            self.update_book(book_id, None, None, None, Some(true));
+            Ok(())
         } else {
-            println!("User is not a member of the library!");
-            false
+            return Err("User is not a member of the library!".to_string());
         }
     }
 
-    pub fn return_book(&mut self, member_id: u32, book_id: u32) -> bool {
+    pub fn return_book(&mut self, member_id: u32, book_id: u32) -> Result<(), String> {
         if !self.is_contain_book(book_id) {
-            println!("Book not found!");
-            return false;
+            return Err("Book not found!".to_string());
         }
         if let Some(member) = self.members.iter_mut().find(|x| x.id == member_id) {
-            member.return_book(book_id);
-            true
+            match member.return_book(book_id) {
+                Ok(_) => {
+                    self.update_book(book_id, None, None, None, Some(false));
+                    Ok(())
+                }
+                Err(e) => return Err(e),
+            }
         } else {
-            println!("User is not a member of the library!");
-            false
+            return Err("User is not a member of the library!".to_string());
         }
     }
 

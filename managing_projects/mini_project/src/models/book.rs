@@ -4,15 +4,17 @@ pub struct Book {
     pub title: String,
     pub author: String,
     pub year: u32,
+    pub is_borrowed: bool,
 }
 
 impl Book {
-    pub fn new(id: u32, title:  impl Into<String>, author: impl Into<String>, year: u32) -> Self {
+    pub fn new(id: u32, title: impl Into<String>, author: impl Into<String>, year: u32) -> Self {
         Self {
             id,
             title: title.into(),
             author: author.into(),
             year,
+            is_borrowed: false,
         }
     }
 }
